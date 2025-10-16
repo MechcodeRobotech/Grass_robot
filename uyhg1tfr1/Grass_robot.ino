@@ -72,7 +72,7 @@ BLYNK_WRITE(V2)
   // Serial.println(Walkround);
 }
 
-BLYNK_WRITE(V2)
+BLYNK_WRITE(V3)
 {
   int pumpState = param.asInt();
   if (pumpState == 0) {
