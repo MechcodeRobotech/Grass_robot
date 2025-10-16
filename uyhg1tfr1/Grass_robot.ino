@@ -5,8 +5,6 @@
 #define BLYNK_AUTH_TOKEN            "A9ZOvMmKuQKdiXCeyR3jJlfNuluHmolw"
 #define BLYNK_PRINT Serial
 
-#include <Arduino.h>
-#include <PID_v1.h>
 #include <WiFi.h>
 #include <BlynkSimpleEsp32.h>
 
@@ -24,6 +22,8 @@ BlynkTimer timer;
 //// --- Water pump pin ---
 #define trig_Waterpump 23
 
+bool waterpumpState = LOW;
+
 //// --- Line follower sensor setup ---
 #define NUM_SENSORS 4
 int sensorPins[NUM_SENSORS] = {33, 32, 35, 34};
@@ -33,10 +33,6 @@ float position = 0;  // continuous value
 bool state = false;
 bool runState = false; // 🟢 ใช้ควบคุมการทำงานหุ่นยนต์
 int Walkround = 0;
-
-//// --- Base motor speed and gain ---
-float Kp = 2;       // gain แบบ proportional control
-int baseSpeed = 50;  // ยังไม่ได้ใช้ PWM ตอนนี้
 
 bool allBlack = false;
 
@@ -71,9 +67,20 @@ BLYNK_WRITE(V1)
 
 BLYNK_WRITE(V2)
 {
-  int pumpState = param.asInt();
-  Walkround = pumpState;
+  int numRound = param.asInt();
+  Walkround = numRound;
   // Serial.println(Walkround);
+}
+
+BLYNK_WRITE(V2)
+{
+  int pumpState = param.asInt();
+  if (pumpState == 0) {
+    waterpumpState = LOW;
+  } else {
+    waterpumpState = HIGH;
+  }
+  
 }
 
 //// ======================================================
@@ -110,7 +117,7 @@ void loop() {
 
     // --- ใช้ position ในการตัดสินใจเคลื่อนที่ ---
     if (runState){
-      digitalWrite(trig_Waterpump, HIGH);
+      digitalWrite(trig_Waterpump, waterpumpState);
 
       if (position > 5) { 
         turnRight();   // เส้นอยู่ทางขวา
