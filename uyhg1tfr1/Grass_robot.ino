@@ -177,18 +177,18 @@ void forward() {
 }
 
 void turnLeft() {
-  analogWrite(R_LeftWheelRPM, 0);
-  analogWrite(L_LeftWheelRPM, 0);
-  analogWrite(R_RightWheelRPM, 0);
-  analogWrite(L_RightWheelRPM, 70);
-  Serial.println("Turn Left");
-}
-
-void turnRight() {
   analogWrite(R_LeftWheelRPM, 70);
   analogWrite(L_LeftWheelRPM, 0);
   analogWrite(R_RightWheelRPM, 0);
   analogWrite(L_RightWheelRPM, 0);
+  Serial.println("Turn Left");
+}
+
+void turnRight() {
+  analogWrite(R_LeftWheelRPM, 0);
+  analogWrite(L_LeftWheelRPM, 0);
+  analogWrite(R_RightWheelRPM, 0);
+  analogWrite(L_RightWheelRPM, 70);
   Serial.println("Turn Right");
 }
 
